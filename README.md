@@ -1,5 +1,4 @@
 # Mail System
----
 This is a python mail sender system which is used as a backend on communicating with SMTP server.
 It's use `stmplib` for SMTP connection with SSL security.
 
