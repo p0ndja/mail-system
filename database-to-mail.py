@@ -34,9 +34,14 @@ except Exception as e:
     exit(0)
 
 def findQueue():
-    mycursor = dbconnector.cursor(buffered=True)
-    mycursor.execute("SELECT `id`,`title`,`sender`,`receiver`,`mail`,`variable` FROM `mailsystem` WHERE isSend = 0 ORDER BY `id`") #Get specific data from submission SQL where result is W (Wait)
-    return mycursor.fetchall() #fetchone() -> fetch 1 data matched, fetchall() -> fetch all data matched
+    try:
+        mycursor = dbconnector.cursor(buffered=True)
+        mycursor.execute("SELECT `id`,`title`,`sender`,`receiver`,`mail`,`variable` FROM `mailsystem` WHERE isSend = 0 ORDER BY `id`") #Get specific data from submission SQL where result is W (Wait)
+        return mycursor.fetchall() #fetchone() -> fetch 1 data matched, fetchall() -> fetch all data matched
+    except Exception as e:
+        print("[!] ERROR losing connection to database:\n", e)
+        print("[!] The system will be halt for 30 seconds and will try again.")
+        time.sleep(30)
 
 if __name__ == '__main__':
     mycursor = dbconnector.cursor(buffered=True)
@@ -93,5 +98,5 @@ if __name__ == '__main__':
             dbconnector.commit()
             time.sleep(1)
         dbconnector.commit()
-        time.sleep(1)
-        #Time sleep interval for 1 second.
+        time.sleep(3)
+        #Time sleep interval for 3 second.
