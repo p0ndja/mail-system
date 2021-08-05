@@ -4,6 +4,7 @@ try:
     import json
     from email.mime.text import MIMEText
     from email.mime.multipart import MIMEMultipart
+    from email.header import Header
 except Exception as e:
     print("[!] ERROR on importing module:\n",e)
     exit(0)
@@ -36,7 +37,7 @@ def sendEmail(sender:str,receiver:str,subject:str,mail:str,variable:str):
 
     message = MIMEMultipart("alternative")
     message["Subject"] = subject
-    message["From"] = sender_name
+    message["From"] = str(Header(f'{sender_name} <{sender_email}>'))
     message["To"] = receiver
 
     content_html = readHTML(mail)
