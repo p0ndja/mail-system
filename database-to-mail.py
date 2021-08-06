@@ -42,6 +42,7 @@ def findQueue():
         print("[!] ERROR losing connection to database:\n", e)
         print("[!] The system will be halt for 30 seconds and will try again.")
         time.sleep(30)
+        return findQueue()
 
 if __name__ == '__main__':
     mycursor = dbconnector.cursor(buffered=True)
