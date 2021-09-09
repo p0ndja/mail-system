@@ -70,7 +70,7 @@ if __name__ == '__main__':
                 send = PJMail.sendEmail(f"{senderData['name']};{senderData['email']};{senderData['password']}",receiver,title,mail,var)
                 # 1 : Success
                 if (send == 1):
-                    print(f"Sent email to {senderData['email']}.")
+                    #print(f"Sent email to {receiver}.")
                     statusCode = 1
                     break
                 # 0 : Unsuccess -> Missing Sender Data
