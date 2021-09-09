@@ -70,14 +70,17 @@ if __name__ == '__main__':
                 send = PJMail.sendEmail(f"{senderData['name']};{senderData['email']};{senderData['password']}",receiver,title,mail,var)
                 # 1 : Success
                 if (send == 1):
+                    print(f"Sent email to {senderData['email']}.")
                     statusCode = 1
                     break
                 # 0 : Unsuccess -> Missing Sender Data
                 elif (send == 0):
+                    print(f"Missing sender data.")
                     statusCode = -1
                     break
                 # -1 : Unsuccess -> URL response not 200
                 elif (send == -1):
+                    print(f"Invalid email template URL.")
                     statusCode = -2
                     break
                 # -9 : Email Sending Error

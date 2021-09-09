@@ -41,6 +41,8 @@ def sendEmail(sender:str,receiver:str,subject:str,mail:str,variable:str):
     message["To"] = receiver
 
     content_html = readHTML(mail)
+    if (content_html == -1):
+        return -1
     var = json.loads(variable)
     for v in var:
         content_html = content_html.replace("{{"+v+"}}",var[v])
