@@ -86,11 +86,12 @@ if __name__ == '__main__':
                 # -9 : Email Sending Error
                 elif (send == -9):
                     if (tries != 5):
-                        print(f"Unable to send email....Will try again in {tries*5} seconds. Try: {tries}/5")
-                        time.sleep(tries*5)
+                        print(f"Unable to send email....Will try again in 5 seconds. Try: {tries}/5")
+                        time.sleep(5)
                     else:
                         print(f"Unable to send email....But reached maximum tries, SKIPPED.")
                         statusCode = -9
+                        break
                 else:
                     statusCode = -99
                     print(f"WTF, THERE'S NO ERROR CODE LIKE {send}....WHAT!?")
