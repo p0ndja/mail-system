@@ -103,5 +103,5 @@ if __name__ == '__main__':
             dbconnector.commit()
             time.sleep(1)
         dbconnector.commit()
-        time.sleep(3)
-        #Time sleep interval for 3 second.
+        time.sleep(5)
+        #Time sleep interval for 5 second.
