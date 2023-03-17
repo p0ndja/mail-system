@@ -53,7 +53,7 @@ def findQueue():
 if __name__ == '__main__':
     print("[/] Mail System, Starto!")
     while(1):
-        dbconnector()
+        dbconnect()
         queue = findQueue()
         if (len(queue)):
             print(f"Found waiting mail queue: {len(queue)}\n{queue}")
