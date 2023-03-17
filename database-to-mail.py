@@ -12,8 +12,7 @@ except Exception as e:
 dbconnector = None
 mycursor = None
 
-def dbconnect():
-    global dbconnector, mycursor
+def checkSettings():
     # Check if settings is exist.
     if not path.isfile("settings.json"):
         json = """{
@@ -29,6 +28,10 @@ def dbconnect():
         f.write(str(json))
         print("/!\ Please config your connection settings first. /!\\")
         exit(0)
+
+def dbconnect():
+    global dbconnector, mycursor
+    checkSettings()
 
     #Loading settings.json
     f = json.loads(open("settings.json", "r").read())
