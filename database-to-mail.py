@@ -9,45 +9,51 @@ except Exception as e:
     print("[!] ERROR on importing module:\n",e)
     exit(0)
 
-# Check if settings is exist.
-if not path.isfile("settings.json"):
-    json = """{
-    "database": {
-        "host":     "<<IP>>",
-        "username": "<<USERNAME>>",
-        "password": "<<PASSWORD>>",
-        "database": "<<DATABASE>>"
-    }
-}"""
-    
-    f = open("settings.json","w")
-    f.write(str(json))
-    print("/!\ Please config your connection settings first. /!\\")
-    exit(0)
+dbconnector = None
+mycursor = None
 
-#Loading settings.json
-f = json.loads(open("settings.json", "r").read())
-try:
-    dbconnector = mysql.connector.connect(host=f['database']['host'],user=f['database']['username'],password=f['database']['password'],database=f['database']['database'])
-except Exception as e:
-    print("[!] ERROR on establishing database:\n", e)
-    exit(0)
+def dbconnect():
+    global dbconnector, mycursor
+    # Check if settings is exist.
+    if not path.isfile("settings.json"):
+        json = """{
+        "database": {
+            "host":     "<<IP>>",
+            "username": "<<USERNAME>>",
+            "password": "<<PASSWORD>>",
+            "database": "<<DATABASE>>"
+        }
+    }"""
+        
+        f = open("settings.json","w")
+        f.write(str(json))
+        print("/!\ Please config your connection settings first. /!\\")
+        exit(0)
+
+    #Loading settings.json
+    f = json.loads(open("settings.json", "r").read())
+    try:
+        dbconnector = mysql.connector.connect(host=f['database']['host'],user=f['database']['username'],password=f['database']['password'],database=f['database']['database'])
+        mycursor = dbconnector.cursor(buffered=True)
+    except Exception as e:
+        print("[!] ERROR on establishing database:\n", e)
+        exit(0)
 
 def findQueue():
-    try:
-        mycursor = dbconnector.cursor(buffered=True)
-        mycursor.execute("SELECT `id`,`title`,`sender`,`receiver`,`mail`,`variable` FROM `mailsystem` WHERE isSend = 0 ORDER BY `id`") #Get specific data from submission SQL where result is W (Wait)
-        return mycursor.fetchall() #fetchone() -> fetch 1 data matched, fetchall() -> fetch all data matched
-    except Exception as e:
-        print("[!] ERROR losing connection to database:\n", e)
-        print("[!] The system will be halt for 30 seconds and will try again.")
-        time.sleep(30)
-        return findQueue()
+    while True:
+        try:
+            mycursor.execute("SELECT `id`,`title`,`sender`,`receiver`,`mail`,`variable` FROM `mailsystem` WHERE isSend = 0 ORDER BY `id`") #Get specific data from submission SQL where result is W (Wait)
+            return mycursor.fetchall() #fetchone() -> fetch 1 data matched, fetchall() -> fetch all data matched
+        except Exception as e:
+            print("[!] ERROR losing connection to database:\n", e)
+            print("[!] The system will be halt for 30 seconds and will try again.")
+            time.sleep(30)
+            dbconnect()
 
 if __name__ == '__main__':
-    mycursor = dbconnector.cursor(buffered=True)
     print("[/] Mail System, Starto!")
     while(1):
+        dbconnector()
         queue = findQueue()
         if (len(queue)):
             print(f"Found waiting mail queue: {len(queue)}\n{queue}")
@@ -103,5 +109,6 @@ if __name__ == '__main__':
             dbconnector.commit()
             time.sleep(1)
         dbconnector.commit()
+        dbconnector.close()
         time.sleep(10)
         #Time sleep interval for 5 second.
