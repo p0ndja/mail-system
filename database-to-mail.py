@@ -43,11 +43,13 @@ def dbconnect():
         try:
             dbconnector = mysql.connector.connect(host=f['database']['host'],user=f['database']['username'],password=f['database']['password'],database=f['database']['database'])
             mycursor = dbconnector.cursor(buffered=True)
+            if (attempt != 0):
+                print('[/] Connection Success!')
         except Exception as e:
             print("[!] ERROR on establishing database:\n", e)
             attempt+=1
-            time.sleep(60*attempt)
             print(f"Retrying in {60*attempt} seconds...")
+            time.sleep(60*attempt)
             if (attempt == 5):
                 print("/!\ Maximum Attempt Reached")
                 exit(0)
