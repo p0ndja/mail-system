@@ -33,14 +33,24 @@ def dbconnect():
     global dbconnector, mycursor
     checkSettings()
 
+    attempt = 0
+    dbconnector = None
+    mycursor = None
+
     #Loading settings.json
     f = json.loads(open("settings.json", "r").read())
-    try:
-        dbconnector = mysql.connector.connect(host=f['database']['host'],user=f['database']['username'],password=f['database']['password'],database=f['database']['database'])
-        mycursor = dbconnector.cursor(buffered=True)
-    except Exception as e:
-        print("[!] ERROR on establishing database:\n", e)
-        exit(0)
+    while mycursor == None:
+        try:
+            dbconnector = mysql.connector.connect(host=f['database']['host'],user=f['database']['username'],password=f['database']['password'],database=f['database']['database'])
+            mycursor = dbconnector.cursor(buffered=True)
+        except Exception as e:
+            print("[!] ERROR on establishing database:\n", e)
+            attempt+=1
+            time.sleep(60*attempt)
+            print(f"Retrying in {60*attempt} seconds...")
+            if (attempt == 5):
+                print("/!\ Maximum Attempt Reached")
+                exit(0)
 
 def findQueue():
     while True:
